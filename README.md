@@ -12,6 +12,12 @@ chmod +x ./install.sh
 ./install.sh
 ```
 
+# golang Client Example
+
+```
+vim main.go
+```
+
 # zookeeper
 
 https://zookeeper.apache.org/doc/r3.3.3/zookeeperAdmin.html
