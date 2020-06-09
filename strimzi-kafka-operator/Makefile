@@ -12,3 +12,6 @@ NAMESPACE := kafka
 sed:
 	sed -i '' 's!namespace: .*!namespace: $(NAMESPACE)!g' cluster-operator/*RoleBinding*.yaml
 	sed -i '' 's!value: my-kafka-project!value: $(NAMESPACE)!g' cluster-operator/050-Deployment-strimzi-cluster-operator.yaml
+
+apply:
+	kubectl apply --namespace $(NAMESPACE) -f cluster-operator
