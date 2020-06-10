@@ -14,6 +14,7 @@ spec:
       transaction.state.log.replication.factor: 1
       transaction.state.log.min.isr: 1
       log.message.format.version: "2.5"
+      linger.ms: 100 # reduce default waiting time for producer but increase loading
     storage:
       type: jbod
       volumes:

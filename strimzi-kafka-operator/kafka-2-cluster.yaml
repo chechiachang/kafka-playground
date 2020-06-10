@@ -1,0 +1,150 @@
+# https://github.com/strimzi/strimzi-kafka-operator/blob/master/examples/kafka/kafka-persistent.yaml
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: kafka-2
+spec:
+  kafka:
+    version: 2.5.0
+    replicas: 3
+    listeners:
+      plain: {}
+      tls: {}
+    config:
+      offsets.topic.replication.factor: 3
+      transaction.state.log.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      log.message.format.version: "2.5"
+      linger.ms: 100 # reduce default waiting time for producer but increase loading
+    template:
+      pod:
+        affinity:
+          nodeAffinity:
+            # require be on kafka node
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - kafka
+          podAntiAffinity:
+            # Exclude other app=kafka with best effort
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - kafka
+                topologyKey: kubernetes.io/hostname
+    #resources:
+    #  requests:
+    #    memory: 16Gi
+    #    cpu: "2"
+    #  limits:
+    #    memory: 16Gi
+    #    cpu: "4"
+    #jvmOptions:
+    #  -Xms: 4096m
+    #  -Xmx: 4096m
+    #listeners:
+    #  external:
+    #    type: loadbalancer
+    #    overrides:
+    #      bootstrap:
+    #        address: kafka-lab.internal
+    #        loadBalancerIP: 172.16.128.89
+    #      brokers:
+    #      - broker: 0
+    #        advertisedHost: kafka-lab-0.internal
+    #        loadBalancerIP: 172.16.128.90
+    #      - broker: 1
+    #        advertisedHost: kafka-lab-1.internal
+    #        loadBalancerIP: 172.16.128.91
+    #      - broker: 2
+    #        advertisedHost: kafka-lab-2.internal
+    #        loadBalancerIP: 172.16.128.92
+    #    tls: false
+    storage:
+      type: jbod
+      volumes:
+      - id: 0
+        type: persistent-claim
+        size: 100Gi
+        deleteClaim: false
+  zookeeper:
+    replicas: 3
+    #resources:
+    #  requests:
+    #    memory: 6Gi
+    #    cpu: "2"
+    #  limits:
+    #    memory: 6Gi
+    #    cpu: "2"
+    #jvmOptions:
+    #  -Xms: 3072m
+    #  -Xmx: 3072m
+    storage:
+      type: persistent-claim
+      size: 100Gi
+      deleteClaim: false
+    template:
+      pod:
+        affinity:
+          nodeAffinity:
+            # require be on kafka node
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+              - matchExpressions:
+                - key: kubernetes.io/hostname
+                  operator: In
+                  values:
+                  - kafka
+          podAntiAffinity:
+            # Exclude other app=zookeeper with best effort
+            preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app.kubernetes.io/name
+                    operator: In
+                    values:
+                    - zookeeper
+                topologyKey: kubernetes.io/hostname
+  entityOperator:
+    #template:
+    #  pod:
+    #    #priorityClassName: kafka-cluster-critical
+    #    affinity:
+    #      podAntiAffinity:
+    #        preferredDuringSchedulingIgnoredDuringExecution:
+    #        - weight: 100
+    #          podAffinityTerm:
+    #            labelSelector:
+    #              matchExpressions:
+    #              - key: strimzi.io/cluster
+    #                operator: In
+    #                values:
+    #                - lab
+    #            topologyKey: kubernetes.io/hostname
+    topicOperator: {}
+      #resources:
+      #  requests:
+      #    memory: 256Mi
+      #    cpu: "1"
+      #  limits:
+      #    memory: 256Mi
+      #    cpu: "1"
+    userOperator: {}
+      #resources:
+      #  requests:
+      #    memory: 256Mi
+      #    cpu: "1"
+      #  limits:
+      #    memory: 256Mi
+      #    cpu: "1"
+
