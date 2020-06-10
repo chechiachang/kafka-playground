@@ -1,0 +1,11 @@
+apiVersion: kpt.dev/v1alpha1
+kind: Kptfile
+metadata:
+    name: 0.17.0
+upstream:
+    type: git
+    git:
+        commit: a5a3089d1dfd7d0341e335944e14ba38c2a2f857
+        repo: git@github.com:strimzi/strimzi-kafka-operator
+        directory: /install/cluster-operator
+        ref: 0.17.0
