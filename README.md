@@ -12,9 +12,17 @@ cd ${GOPATH}/github.com/chechiachang/kafka-playground
 
 # Install
 
-- [helm](helm)
-- [docker-compose](docker-compose)
 - [vagrant](vagrant)
+- [docker-compose (confluent-kafka)](docker-compose)
+- [helm (helm-kafka)](helm)
+
+```
+wget https://github.com/strimzi/strimzi-kafka-operator/releases/download/0.18.0/strimzi-cluster-operator-0.18.0.yaml
+sed -i 's/namespace: .*/namespace: kafka/' strimzi-cluster-operator-0.18.0.yaml
+
+kubectl create ns kafka
+kubectl -n kafka apply -f strimzi-cluster-operator-0.18.0.yaml
+```
 
 # vagrant
 

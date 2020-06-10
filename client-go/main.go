@@ -12,9 +12,12 @@ import (
 func main() {
 	topic := "ticker"
 	partition := 0
-	kafkaURL := "localhost:29092"
+	kafkaURL := "localhost:9092"
 
-	producerConn, _ := kafka.DialLeader(context.Background(), "tcp", kafkaURL, topic, partition)
+	producerConn, err := kafka.DialLeader(context.Background(), "tcp", kafkaURL, topic, partition)
+	if err != nil {
+		panic(err)
+	}
 	defer producerConn.Close()
 
 	//producerConn.SetWriteDeadline(time.Now().Add(10 * time.Second))
