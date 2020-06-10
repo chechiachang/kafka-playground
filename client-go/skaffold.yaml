@@ -1,0 +1,35 @@
+# https://skaffold.dev/docs/references/yaml
+apiVersion: skaffold/v2beta4
+kind: Config
+metadata:
+  name: kafka-go-skaffold
+build:
+  artifacts:
+    - image: chechiachang/kafka-go
+      context: .
+      docker:
+        dockerfile: Dockerfile
+      #kaniko:
+      #  dockerfile: Dockerfile
+deploy:
+  kubectl:
+    manifests:
+      - deployment.yaml
+  #kustomize:
+  #  paths:
+  #    - .
+#profiles:
+#  - name: dev
+#    activation:
+#      - env: ENV=dev
+#        command: dev
+#    build: {}
+#    test: {}
+#    deploy: {}
+#  - name: prod
+#    activation:
+#      - env: ENV=production
+#        command: prod
+#    build: {}
+#    test: {}
+#    deploy: {}

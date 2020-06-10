@@ -8,4 +8,4 @@ FROM golang:1.11.2-alpine
 WORKDIR /root/
 COPY --from=builder /go/src/github.com/chechiachang/kafka-playground/client-go/app .
 EXPOSE 8080
-#ENTRYPOINT ["./app"]
+ENTRYPOINT ["./app"]

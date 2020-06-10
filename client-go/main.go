@@ -2,7 +2,8 @@ package main
 
 import (
 	"context"
-	"fmt"
+	"log"
+	"os"
 	"strconv"
 	"time"
 
@@ -10,9 +11,14 @@ import (
 )
 
 func main() {
-	topic := "ticker"
-	partition := 0
-	kafkaURL := "localhost:9092"
+	topic := os.Getenv("KAFKA_TOPIC")
+	partition, err := strconv.Atoi(os.Getenv("KAFKA_PARTITION"))
+	if err != nil {
+		log.Println("Failed to parse env KAFKA_PARTITION")
+		partition = 0
+	}
+	kafkaURL := os.Getenv("KAFKA_URL")
+	log.Printf("topic: %s partition: %v kafkaURL: %s", topic, partition, kafkaURL)
 
 	producerConn, err := kafka.DialLeader(context.Background(), "tcp", kafkaURL, topic, partition)
 	if err != nil {
@@ -46,9 +52,10 @@ func main() {
 	for {
 		m, err := r.ReadMessage(context.Background())
 		if err != nil {
+			log.Println(err)
 			break
 		}
-		fmt.Printf("%v message at offset %d: %s = %s\n", time.Now(), m.Offset, string(m.Key), string(m.Value))
+		log.Println("%v message at offset %d: %s = %s\n", time.Now(), m.Offset, string(m.Key), string(m.Value))
 	}
 
 }
