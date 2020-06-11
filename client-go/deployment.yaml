@@ -24,7 +24,7 @@ spec:
             - name: KAFKA_PARTITION
               value: "0"
             - name: KAFKA_URL
-              value: "kafka-1-kafka-bootstrap:9092"
+              value: "kafka-3-kafka-bootstrap:9092"
           #livenessProbe:
           #  httpGet:
           #    path: /healthy

@@ -3,9 +3,11 @@ apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
   name: kafka-3
+  namespace: kafka
 spec:
   kafka:
-    version: 2.5.0
+    #version: 2.5.0 # required operator>=0.18.0
+    version: 2.4.0
     replicas: 3
     listeners:
       plain: {}
@@ -14,32 +16,32 @@ spec:
       offsets.topic.replication.factor: 3
       transaction.state.log.replication.factor: 3
       transaction.state.log.min.isr: 2
-      log.message.format.version: "2.5"
+      log.message.format.version: "2.4"
       linger.ms: 100 # reduce default waiting time for producer but increase loading
-    template:
-      pod:
-        affinity:
-          nodeAffinity:
-            # require be on kafka node
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: Exists
-                  values:
-                  - kafka
-          podAntiAffinity:
-            # Exclude other app=kafka with best effort
-            preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                    - kafka
-                topologyKey: kubernetes.io/hostname
+    #template:
+    #  pod:
+    #    affinity:
+    #      nodeAffinity:
+    #        # require be on kafka node
+    #        preferredDuringSchedulingIgnoredDuringExecution:
+    #          nodeSelectorTerms:
+    #          - matchExpressions:
+    #            - key: kubernetes.io/hostname
+    #              operator: In
+    #              values:
+    #              - kafka
+    #      podAntiAffinity:
+    #        # Exclude other app=kafka with best effort
+    #        preferredDuringSchedulingIgnoredDuringExecution:
+    #        - weight: 100
+    #          podAffinityTerm:
+    #            labelSelector:
+    #              matchExpressions:
+    #              - key: app.kubernetes.io/name
+    #                operator: In
+    #                values:
+    #                - kafka
+    #            topologyKey: kubernetes.io/hostname
     #resources:
     #  requests:
     #    memory: 16Gi
@@ -91,45 +93,54 @@ spec:
       type: persistent-claim
       size: 100Gi
       deleteClaim: false
-    template:
-      pod:
-        affinity:
-          nodeAffinity:
-            # require be on kafka node
-            requiredDuringSchedulingIgnoredDuringExecution:
-              nodeSelectorTerms:
-              - matchExpressions:
-                - key: kubernetes.io/hostname
-                  operator: Exists
-                  values:
-                  - kafka
-          podAntiAffinity:
-            # Exclude other app=zookeeper with best effort
-            preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              podAffinityTerm:
-                labelSelector:
-                  matchExpressions:
-                  - key: app.kubernetes.io/name
-                    operator: In
-                    values:
-                    - zookeeper
-                topologyKey: kubernetes.io/hostname
-  entityOperator:
     #template:
     #  pod:
-    #    #priorityClassName: kafka-cluster-critical
     #    affinity:
+    #      nodeAffinity:
+    #        # require be on kafka node
+    #        preferredDuringSchedulingIgnoredDuringExecution:
+    #          nodeSelectorTerms:
+    #          - matchExpressions:
+    #            - key: kubernetes.io/hostname
+    #              operator: In
+    #              values:
+    #              - kafka
     #      podAntiAffinity:
+    #        # Exclude other app=zookeeper with best effort
     #        preferredDuringSchedulingIgnoredDuringExecution:
     #        - weight: 100
     #          podAffinityTerm:
     #            labelSelector:
     #              matchExpressions:
-    #              - key: strimzi.io/cluster
+    #              - key: app.kubernetes.io/name
     #                operator: In
     #                values:
-    #                - lab
+    #                - zookeeper
+    #            topologyKey: kubernetes.io/hostname
+  entityOperator:
+    #template:
+    #  pod:
+    #    affinity:
+    #      nodeAffinity:
+    #        # require be on kafka node
+    #        requiredDuringSchedulingIgnoredDuringExecution:
+    #          nodeSelectorTerms:
+    #          - matchExpressions:
+    #            - key: kubernetes.io/hostname
+    #              operator: Exists
+    #              values:
+    #              - kafka
+    #      podAntiAffinity:
+    #        # Exclude other app=zookeeper with best effort
+    #        preferredDuringSchedulingIgnoredDuringExecution:
+    #        - weight: 100
+    #          podAffinityTerm:
+    #            labelSelector:
+    #              matchExpressions:
+    #              - key: app.kubernetes.io/name
+    #                operator: In
+    #                values:
+    #                - entity-operator
     #            topologyKey: kubernetes.io/hostname
     topicOperator: {}
       #resources:

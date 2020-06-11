@@ -34,7 +34,7 @@ func main() {
 					Value: []byte(strconv.Itoa(time.Now().Second())),
 				},
 			)
-			time.Sleep(1 * time.Second)
+			time.Sleep(1000 * time.Millisecond)
 		}
 	}()
 
@@ -43,8 +43,9 @@ func main() {
 		Brokers:   []string{kafkaURL},
 		Topic:     topic,
 		Partition: 0,
-		MinBytes:  10e2, // 1KB
-		MaxBytes:  10e3, // 10KB
+		MinBytes:  0,
+		//MinBytes:  10e2, // 1KB
+		MaxBytes: 10e3, // 10KB
 	})
 	defer r.Close()
 	//r.SetOffset(42)
