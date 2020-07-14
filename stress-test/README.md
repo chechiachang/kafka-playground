@@ -1,7 +1,7 @@
 
 [Benchmark Command](https://gist.github.com/jkreps/c7ddb4041ef62a900e6c)
 
-# 1 master 3 n1-standard-1
+# 1 master 3 n1-standard-2
 
 ```
 TOPIC=test
@@ -62,6 +62,7 @@ BATCH_SIZE=100
   --timeout 60000
 
 start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
+07:59:35:080, 08:00:05:991, 48.8291, 1.5797, 50001, 1617.5795, 1594713579654, -1594713548743, -0.0000, -0.0000
 
 BATCH_SIZE=8196
 ```
