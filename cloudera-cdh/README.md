@@ -39,7 +39,7 @@ Configure database connection for cloudera-manager
 sudo /opt/cloudera/cm/schema/scm_prepare_database.sh -h [host] postgresql [db] [username] [password]
 ```
 
-### Skip Auto-TLS
+### (Skipped) Auto-TLS
 
 Auto-TLS is an enterprise feature
 ```
